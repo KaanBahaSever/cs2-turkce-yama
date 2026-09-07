@@ -2,7 +2,7 @@
     Cities: Skylines II - Turkce Yama / Turkish Localization
     Kurulum betigi. Tek satirla calistirmak icin:
 
-        irm https://raw.githubusercontent.com/KULLANICI/DEPO/main/install.ps1 | iex
+        irm https://raw.githubusercontent.com/KaanBahaSever/cs2-turkce-yama/main/install.ps1 | iex
 
     Parametreler (yerelden calistirirken):
         -Source <yol|url>  Yama dosyasinin konumu
@@ -20,7 +20,7 @@ param(
 $ErrorActionPreference = 'Stop'
 
 # ---- Depo adresi: kendi deponuza gore guncelleyin -------------------------
-$RepoRaw = 'https://raw.githubusercontent.com/KULLANICI/DEPO/main'
+$RepoRaw = 'https://raw.githubusercontent.com/KaanBahaSever/cs2-turkce-yama/main'
 # --------------------------------------------------------------------------
 
 $ModName  = 'TurkishLang'
@@ -59,8 +59,13 @@ Step "Yama dosyasi hazirlaniyor..."
 $patch = $null
 $temp  = $null
 
-if ($Source -and (Test-Path -LiteralPath $Source)) {
-    $patch = (Resolve-Path -LiteralPath $Source).Path
+if ($Source -and $Source -notmatch '^https?://') {
+    if (Test-Path -LiteralPath $Source -ErrorAction SilentlyContinue) {
+        $patch = (Resolve-Path -LiteralPath $Source).Path
+    } else {
+        Fail "Belirtilen dosya bulunamadi: $Source"
+        return
+    }
 }
 if (-not $patch) {
     $candidates = @()

@@ -13,7 +13,7 @@ Oyunun tamamı için Türkçe yerelleştirme. **24.194 satır** çevrilmiştir: 
 PowerShell'i açıp şu satırı yapıştırın:
 
 ```powershell
-irm https://raw.githubusercontent.com/KULLANICI/DEPO/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/KaanBahaSever/cs2-turkce-yama/main/install.ps1 | iex
 ```
 
 Betik oyun klasörünü bulur, çakışan eski çevirileri yedekleyip kaldırır ve yamayı yerine koyar.
@@ -48,7 +48,7 @@ Dosyanın adı neden `en-US.json`? Oyunda Türkçe dil seçeneği yok. I18N Ever
 ## Kaldırma
 
 ```powershell
-irm https://raw.githubusercontent.com/KULLANICI/DEPO/main/uninstall.ps1 | iex
+irm https://raw.githubusercontent.com/KaanBahaSever/cs2-turkce-yama/main/uninstall.ps1 | iex
 ```
 
 Ya da `Mods\TurkishLang` klasörünü silin.

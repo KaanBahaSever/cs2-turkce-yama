@@ -1,7 +1,7 @@
 <#
     Cities: Skylines II - Turkce Yama / kaldirma betigi
 
-        irm https://raw.githubusercontent.com/KULLANICI/DEPO/main/uninstall.ps1 | iex
+        irm https://raw.githubusercontent.com/KaanBahaSever/cs2-turkce-yama/main/uninstall.ps1 | iex
 #>
 #Requires -Version 5.1
 [CmdletBinding()]
