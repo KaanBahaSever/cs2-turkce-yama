@@ -126,7 +126,10 @@
     <Message Importance="high" Text="  $(PdxCommandLine)" />
     <Message Importance="high" Condition="'$(PdxDryRun)' == 'true'" Text="  DRY RUN - nothing was sent." />
     <!-- Working directory = repository root: relative paths in the configuration (thumbnail, screenshots) resolve from there. -->
-    <Exec Condition="'$(PdxDryRun)' != 'true'" Command="$(PdxCommandLine)" WorkingDirectory="$(RepoRoot)" LogStandardErrorAsError="true" />
+    <!-- chcp 65001: ModPublisher echoes the description it sends; on a non-Turkish console code page that echo
+         would show "Sehir" for "Şehir" and hide whether the text really went out intact. -->
+    <Exec Condition="'$(PdxDryRun)' != 'true'" Command="chcp 65001 &gt;NUL &amp;&amp; $(PdxCommandLine)" WorkingDirectory="$(RepoRoot)"
+          LogStandardErrorAsError="true" StdOutEncoding="utf-8" StdErrEncoding="utf-8" />
   </Target>
 
 </Project>
