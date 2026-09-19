@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Publish>
-	<!-- Empty = first upload: Paradox Mods assigns a new id. ModPublisher only PRINTS it ("Mod published with Id=...");
-	     paste that number here afterwards - NewVersion and Update refuse to run without it. -->
-	<ModId Value="" />
+	<!-- Assigned by Paradox Mods on the first upload. Required by NewVersion and Update; never clear it. -->
+	<ModId Value="159725" />
 	<DisplayName Value="Turkish Localization (Türkçe Çeviri)" />
 	<ShortDescription Value="Cities: Skylines II için eksiksiz Türkçe çeviri. Başka hiçbir mod gerektirmez." />
 	<LongDescription>
