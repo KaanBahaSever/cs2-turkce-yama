@@ -2,8 +2,9 @@
 
 [Türkçe](#türkçe) · [English](#english)
 
-Bu mod Paradox Mods'a **ilk kez** yükleniyor. `Properties/PublishConfiguration.xml` içindeki `<ModId Value="" />`
-bu yüzden **boş**: Paradox Mods ilk yüklemede yeni bir kimlik atar.
+Mod Paradox Mods'ta yayında: <https://mods.paradoxplaza.com/mods/159725/Windows> (`ModId` = **159725**).
+Aşağıdaki "ilk yükleme" bölümü, modu sıfırdan başka bir hesapla yayımlamak gerekirse diye duruyor; güncellemeler için
+**Sonraki güncellemeler** bölümüne bakın.
 
 > **En önemli adım:** Yükleme bitince araç kimliği yalnızca **ekrana yazar** (`Mod published with Id=123456`),
 > dosyaya **geri yazmaz**. O numarayı `PublishConfiguration.xml` içine elle yapıştırıp commit'lemezseniz
@@ -103,7 +104,7 @@ adres `https://mods.paradoxplaza.com/mods/123456/Windows` biçimindedir ve ortad
 
 ### Sonraki güncellemeler
 
-Oyun yaması gelince README'deki "Bakımcılar için" adımlarıyla çeviriyi güncelleyin, sonra:
+Oyun yaması gelince [DEVELOPMENT.md](DEVELOPMENT.md) içindeki adımlarla çeviriyi güncelleyin, sonra:
 
 1. Sürümü üç dosyada artırın (ör. `2.0.1`). Paradox Mods aynı sürüm numarasını ikinci kez kabul etmez.
 2. `<ChangeLog>` içeriğini yeni sürüme göre yazın (`NewVersion` için zorunludur). Metni **satır başından** başlatın;
@@ -133,9 +134,9 @@ Yalnızca açıklamayı, küçük resmi ya da bağlantıları değiştirdiyseniz
 
 ### Bilinmesi gerekenler
 
-- **`GameVersion`** şu an `1.*`. Bu değer siteye "önerilen oyun sürümü" olarak olduğu gibi iletilir. Yayımlanmış modların çoğu
-  `1.6.*` biçimini kullanır; iki parçalı `1.*` biçiminin kabul edilip edilmediğini doğrulayamadık. Yükleme bu alan yüzünden
-  reddedilirse `1.6.*` yapın.
+- **`GameVersion`** şu an `1.6.2f1`: modun test edildiği tam oyun sürümü. Bu değer siteye "önerilen oyun sürümü" olarak
+  olduğu gibi iletilir (`1.*` biçimi de kabul ediliyor; ilk yüklemede denendi). Her oyun yamasında çeviriyi güncellerken bu alanı da
+  yeni sürüme çekin.
 - **Etiket:** ModPublisher her kod moduna `Code Mod` etiketini kendisi ekler. Diğer etiketleri yüklemeden sonra sitede düzenleyebilirsiniz.
 - **Ekran görüntüleri:** Oyun içi görüntüleri `Properties/` altına koyup her biri için
   `<Screenshot Value="Properties/ekran1.jpg" />` satırı ekleyin (en çok 10 adet, her biri en çok 2 MB), sonra `Update` çalıştırın.
@@ -248,8 +249,9 @@ Use `-p:PdxCommand=Update` when only the description, thumbnail or links changed
 
 ### Good to know
 
-- **`GameVersion`** is `1.*`. The value is forwarded verbatim as the "recommended game version". Most published mods use the
-  `1.6.*` form; whether a two-part `1.*` is accepted could not be verified. If the upload is rejected because of it, use `1.6.*`.
+- **`GameVersion`** is `1.6.2f1`, the exact game build the mod was tested with. The value is forwarded verbatim as the
+  "recommended game version" (the `1.*` form is accepted too; it was used for the first upload). Bump it together with the
+  translation on every game patch.
 - ModPublisher tags every code mod `Code Mod` by itself; other tags can be edited on the website afterwards.
 - Screenshots: add `<Screenshot Value="Properties/shot1.jpg" />` lines (10 max, 2 MB each) and run `Update`.
 - The official IDE route (full toolchain from `Options > Modding`, Visual Studio publish profiles `PublishNewMod`,

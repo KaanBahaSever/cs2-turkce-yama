@@ -2,38 +2,48 @@
 <Publish>
 	<!-- Assigned by Paradox Mods on the first upload. Required by NewVersion and Update; never clear it. -->
 	<ModId Value="159725" />
-	<DisplayName Value="Turkish Localization (Türkçe Çeviri)" />
-	<ShortDescription Value="Cities: Skylines II için eksiksiz Türkçe çeviri. Başka hiçbir mod gerektirmez." />
-	<LongDescription>
-# Türkçe Çeviri
+	<DisplayName Value="Türkçe Çeviri" />
+	<ShortDescription Value="Cities: Skylines II için güncel eksiksiz Türkçe çeviri. Başka hiçbir mod gerektirmez." />
+	<LongDescription><![CDATA[# Cities: Skylines II - Türkçe Çeviri (v2.0.0)
 
-Cities: Skylines II'nin tamamı için Türkçe yerelleştirme: arayüz, ekonomi ve istatistik panelleri, öğreticiler, oyun içi sözlük, politikalar, Chirper gönderileri, harita ve düzenleyici araçları ile tüm yapı adları ve açıklamaları.
-
-## Özellikler
-- **Bağımsız çalışır.** I18N Everywhere ya da başka bir mod gerekmez; çevirinin tamamı modun içine gömülüdür.
-- **Gerçek bir dil seçeneği ekler.** Seçenekler > Arayüz > Dil listesinde "Türkçe" diğer diller gibi görünür. İngilizce metinlerin üzerine yazmaz; istediğiniz an başka bir dile dönebilirsiniz.
-- **24.000'den fazla satır**, temel oyun ile tüm DLC ve yaratıcı paketlerini kapsar.
-- Şehir planlama terimleri tutarlıdır: İmar, Atık Su, Döner Kavşak, Şebeke, Karma Kullanım, Gelişim Seviyesi...
-- Türkçe büyük/küçük harf kuralları gözetilmiştir (İ/i, I/ı); "HAKKıNDA" gibi bozuk başlıklar yoktur.
-- Başka bir Türkçe çeviri yüklüyse çakışmaz: anahtarlar güvenle birleştirilir, bu modun metinleri öncelik alır.
-
-## Kullanım
-Modu etkinleştirip oyunu başlatın. İlk açılışta dil otomatik olarak Türkçe olur (v2.0.0 ile gelen bağımsız sürüm). Dilediğiniz zaman Seçenekler > Arayüz > Dil bölümünden değiştirebilirsiniz.
-
-Eski sürümü (I18N Everywhere ile çalışan "TurkishLang" klasörü) kullanıyorsanız silin; artık gerekmiyor.
-
-## Hata bildirimi
-Yanlış ya da eksik bir çeviri görürseniz GitHub üzerinden bildirin. Ekran görüntüsü ve metnin geçtiği panel çok yardımcı olur.
+Cities: Skylines II için baştan sona hazırlanmış, harici hiçbir eklentiye ihtiyaç duymayan **tamamen bağımsız (standalone)** Türkçe dil modudur. Arayüz, ekonomi panelleri, politikalar, öğreticiler, DLC'ler ve şehir bildirimleri dahil oyunun tamamını Türkçeleştirir.
 
 ---
-**English:** Complete, standalone Turkish localization. Registers a native "Türkçe" language in the options menu; no other mod required.
-	</LongDescription>
+
+### ⚠️ Önemli Kurulum Notları
+
+* **Uyumlu Oyun Sürümü:** **`v1.6.2f1`** (24.267 çeviri anahtarının tamamı günceldir).
+* **Ek Mod Kullanmayın:** Çevirinin çalışması için **I18n EveryWhere veya başka bir yardımcı mod KESİNLİKLE GEREKMEZ.** Mod tek başına çalışır; ekstra dil modları kurmanıza gerek yoktur.
+* **Eski Sürümü Silin:** Eğer daha önce v1 sürümünü (manuel PowerShell kurulumu) kullandıysanız, çakışma olmaması için şu klasörü bilgisayarınızdan silin:
+  `%LOCALAPPDATA%Low\Colossal Order\Cities Skylines II\Mods\TurkishLang`
+
+---
+
+### ✨ Öne Çıkanlar
+
+* **Gerçek Dil Desteği:** Oyunun *Seçenekler > Arayüz > Dil* menüsüne doğrudan **"Türkçe"** seçeneğini ekler. İngilizce dosyalarını ezmez, dilediğiniz an diğer dillere geçiş yapabilirsiniz.
+* **Doğru Türkçe Karakterler:** Arayüzdeki büyük/küçük harf dönüşümleri (İ/i, I/ı) düzeltilmiştir; menülerde bozuk başlıklar (`PARADOX HESABı` vb.) yer almaz.
+* **Eksiksiz İçerik:** 24.000'den fazla satır; tüm temel oyun ve ek içerikleri kapsar. Şehir planlama ve ekonomi terimleri özenle yerelleştirilmiştir.
+
+---
+
+### 🎮 Nasıl Kullanılır?
+
+1. Modu Paradox Mods üzerinden aktif edin ve oyunu başlatın.
+2. Mod ilk açılışta dili otomatik olarak **Türkçe** yapar.  
+   *(İstediğiniz zaman Seçenekler > Arayüz > Dil menüsünden dili değiştirebilirsiniz).*
+
+---
+
+**English:**  
+Complete, 100% standalone Turkish localization for Cities: Skylines II (compatible with patch **v1.6.2f1**). Registers a native "Türkçe" option in the language menu. **No third-party mods (such as I18n EveryWhere) are required.**
+]]></LongDescription>
 	<!-- Relative to the repository root (the publish target runs ModPublisher from there). Regenerate: python tools/make_thumbnail.py -->
 	<Thumbnail Value="Properties/Thumbnail.png" />
 	<Tag Value="Code Mod" />
 	<ForumLink Value="" />
 	<ModVersion Value="2.0.0" />
-	<GameVersion Value="1.*" />
+	<GameVersion Value="1.6.2f1" />
 	<ChangeLog>
 ## v2.0.0 - Bağımsız mod / Standalone rewrite
 
