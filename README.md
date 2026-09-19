@@ -1,81 +1,247 @@
-# Cities: Skylines II — Türkçe Yama
+# Cities: Skylines II — Türkçe Çeviri / Turkish Localization
 
-Oyunun tamamı için Türkçe yerelleştirme. **24.194 satır** çevrilmiştir: arayüz, ekonomi ve istatistik panelleri, öğreticiler, sözlük, politikalar, Chirper gönderileri, tüm yapı adları ve açıklamaları.
+[Türkçe](#türkçe) · [English](#english)
 
-- **Oyun sürümü:** 1.6.0f1
-- **Kapsam:** temel oyun + tüm DLC'ler ve yaratıcı paketleri
-- **Gereksinim:** [I18N Everywhere](https://mods.paradoxplaza.com/mods/75426/Windows) modu
+Oyunun tamamı için Türkçe yerelleştirme — **24.267 satır, %100 kapsam**, temel oyun + tüm DLC ve yaratıcı paketleri.
+
+**v2.0.0 ile baştan yazıldı:** artık bağımsız bir C# modu. **Başka hiçbir mod gerektirmez.**
+
+| | |
+| --- | --- |
+| Mod sürümü | 2.0.0 |
+| Test edilen oyun sürümü | 1.6.2f1 |
+| Bağımlılık | Yok |
 
 ---
 
-## Kurulum
+## Türkçe
 
-PowerShell'i açıp şu satırı yapıştırın:
+### v2.0.0'da ne değişti?
+
+v1, I18N Everywhere modunun okuduğu JSON dosyalarını bir PowerShell betiğiyle yerine kopyalayan geçici bir çözümdü.
+**v2.0.0 bunun yerini tamamen alıyor:**
+
+| | v1 (eski) | v2.0.0 |
+| --- | --- | --- |
+| Biçim | PowerShell betiği + açıkta JSON dosyası | Tek bir DLL, çeviri içine gömülü |
+| Gereken ek mod | I18N Everywhere | **Yok** |
+| Oyundaki görünümü | İngilizce dilinin üzerine yazardı | Dil listesinde gerçek bir **Türkçe** seçeneği |
+| Oyun yaması | 1.6.0f1 (24.194 satır) | **1.6.2f1 (24.267 satır)** |
+| Büyük harf hataları | "GRAFıK", "HAKKıNDA" | **GRAFİK**, **HAKKINDA** |
+
+### Özellikler
+
+- **Tamamen bağımsız.** Çevirinin tamamı DLL'in içine gömülüdür. I18N Everywhere dahil hiçbir ek mod gerekmez.
+- **Gerçek bir dil seçeneği.** `Seçenekler > Arayüz > Dil` listesine yerleşik diller gibi **Türkçe** eklenir.
+  İngilizce metinlerin üzerine yazmaz; istediğiniz an başka bir dile dönebilirsiniz.
+- **İlk açılışta otomatik Türkçe.** Sonrasında seçiminize dokunmaz.
+- **Çakışmaya dayanıklı.** Başka bir mod `tr-TR` dilini zaten eklediyse hata vermez; anahtarlar birleştirilir, bu modun metinleri öncelik alır.
+- **Doğru Türkçe harfler.** İ/i ve I/ı kurallarına uyulmuştur.
+- **Çökmeye karşı güvenli kültür ayarı.** `tr-TR` kültürü yalnızca Türkçe etkinken uygulanır, sayı biçimi değişmez tutulur
+  (başka modlardaki `float.Parse("1.5")` bozulmaz) ve dil değişince eski kültür geri yüklenir.
+- **Tutarlı terminoloji.** İmar, Atık Su, Döner Kavşak, Şebeke, Karma Kullanım, Gelişim Seviyesi…
+
+### Kurulum
+
+**1. Paradox Mods (önerilen, tek tık):** Oyunda `Paradox Mods` ekranını açın, *Turkish Localization (Türkçe Çeviri)* modunu bulun,
+**Subscribe / Abone ol**'a basın, etkinleştirin ve oyunu yeniden başlatın.
+
+**2. Elle kurulum:** [Releases](../../releases) sayfasından `TurkishLocalization.dll` dosyasını indirin ve şu klasöre koyun
+(klasörler yoksa oluşturun):
+
+```text
+%LOCALAPPDATA%Low\Colossal Order\Cities Skylines II\Mods\TurkishLocalization\TurkishLocalization.dll
+```
+
+İpucu: Windows Gezgini'nin adres çubuğuna `%LOCALAPPDATA%Low\Colossal Order\Cities Skylines II\Mods` yazıp Enter'a basın.
+
+Oyunu başlatın; dil kendiliğinden Türkçe olur. Olmazsa `Options > Interface > Language > Türkçe`.
+
+> **v1'den geçiyorsanız** eski yamanın klasörünü silin: `...\Cities Skylines II\Mods\TurkishLang`.
+> Artık gerekmiyor; durduğu sürece İngilizce dilini de Türkçe gösterir. I18N Everywhere'i yalnızca bu yama için
+> kurduysanız onu da kaldırabilirsiniz. Calypso gibi başka bir Türkçe çeviri varsa kaldırmanız önerilir.
+
+### Derleme
+
+[.NET SDK](https://dotnet.microsoft.com/download) 6 veya üzeri yeterlidir. Oyunun derlemelerinin yerini gösterin:
 
 ```powershell
-irm https://raw.githubusercontent.com/KaanBahaSever/cs2-turkce-yama/main/install.ps1 | iex
+dotnet build src -c Release -p:ManagedPath="<oyun klasörü>\Cities2_Data\Managed"
 ```
 
-Betik oyun klasörünü bulur, çakışan eski çevirileri yedekleyip kaldırır ve yamayı yerine koyar.
+Çıktı: `src\bin\Release\TurkishLocalization.dll`
 
-<details>
-<summary>Elle kurmak isterseniz</summary>
+- Resmî modlama araç zinciri kuruluysa (`CSII_MANAGEDPATH` tanımlıysa) ya da oyun varsayılan Steam klasöründeyse `-p:ManagedPath` gerekmez.
+- `-p:Deploy=true` eklerseniz DLL doğrudan oyunun `Mods` klasörüne kopyalanır.
+- Paradox Mods'a yayımlama adımları: [PUBLISHING.md](PUBLISHING.md)
 
-`en-US.json` dosyasını indirip şu klasöre koyun:
+### Bakımcılar için: oyun yaması gelince
 
+Yeni bir CS2 yaması çıktığında çeviriyi güncellemenin adımları:
+
+1. **Dökümü bırakın.** Oyundan alınan yeni İngilizce parça dosyalarını (`[A]0- en-US.json`, `[A]1- en-US.json`, … kaç dosya olursa olsun)
+   `updates/incoming_en/` klasörüne kopyalayın.
+2. **Farkı çıkarın.**
+
+   ```powershell
+   python tools/check_updates.py
+   ```
+
+   Araç parçaları birleştirir, `src/Localization/tr-TR.json` ve `originals/en-US/en-US.json` ile karşılaştırır ve sonucu
+   `updates/keys_to_translate.json` dosyasına yazar. Üç liste çıkar: **new** (yeni anahtarlar), **modified** (İngilizcesi
+   değişmiş anahtarlar — eski İngilizce ve eski Türkçe yanında verilir) ve **removed** (oyundan kaldırılanlar).
+3. **Çevirin.** O dosyadaki her girdinin boş `"tr"` alanını doldurun:
+
+   ```json
+   "Assets.NAME[FoodTruck01]": { "en": "Food truck 01", "tr": "Yemek Kamyoneti 01" }
+   ```
+
+   `{DEĞİŞKEN}` yer tutucularına, `<etiket>`lere ve `\n` satır sonlarına dokunmayın.
+4. **Birleştirin.**
+
+   ```powershell
+   python tools/check_updates.py --merge updates/keys_to_translate.json
+   ```
+
+   Araç önce denetler: eksik çeviri, bozulmuş yer tutucu/etiket/satır sonu ya da "GRAFıK" türü büyük harf hatası varsa
+   **hiçbir şeyi değiştirmeden** durur ve sorunlu anahtarları listeler. Her şey yolundaysa `src/Localization/tr-TR.json`
+   güncellenir, kaldırılan anahtarlar düşülür, `originals/en-US/` yeni taban olur ve `updates/incoming_en/` boşaltılır.
+5. **Doğrulayın ve derleyin.**
+
+   ```powershell
+   python tools/check_updates.py --validate
+   dotnet build src -c Release -p:ManagedPath="<oyun klasörü>\Cities2_Data\Managed"
+   ```
+
+6. **Sürümü yükseltin ve yayımlayın.** `mod.json`, `src/TurkishLocalization.csproj` ve `Properties/PublishConfiguration.xml`
+   içindeki sürümü artırın, `ChangeLog`'u yazın, ardından [PUBLISHING.md](PUBLISHING.md) adımlarını izleyin.
+
+### Katkı
+
+`src/Localization/tr-TR.json` düz bir `anahtar: değer` dosyasıdır. **Yalnızca sağdaki değerleri** düzenleyin;
+anahtarlara, `{DEĞİŞKEN}` yer tutucularına ve `<icon:…>` / `<inputAction:…>` etiketlerine dokunmayın.
+Yanlış ya da eksik çeviri için [issue açın](../../issues) — ekran görüntüsü ve metnin geçtiği panel çok yardımcı olur.
+
+Not: Oyun bazı başlıkları yalnızca ASCII harfleri büyüterek gösterir (`ı ş ğ ü ö ç` küçük kalır).
+Bu yüzden ayarlar sekmeleri gibi başlıklar dosyada zaten büyük harfle yazılıdır (`HAKKINDA`, `OYNANIŞ`).
+
+### Depo yapısı
+
+```text
+src/                        C# modu
+  Mod.cs                    IMod: tr-TR dilini kaydeder
+  TurkishLocalization.csproj
+  Localization/tr-TR.json   Türkçe çeviri (DLL'e gömülür)
+originals/en-US/            Çevirinin dayandığı İngilizce taban (parça dosyalar + en-US.json)
+updates/incoming_en/        Yeni yama dökümleri buraya
+tools/check_updates.py      Güncelleme aracı
+tools/make_thumbnail.py     Properties/Thumbnail.png üretir
+Properties/                 Paradox Mods yayın ayarları ve küçük resim
+mod.json                    Mod kimlik bilgileri
+PUBLISHING.md               Paradox Mods'a yayımlama kılavuzu
 ```
-%LOCALAPPDATA%Low\Colossal Order\Cities Skylines II\Mods\TurkishLang\lang\en-US.json
+
+---
+
+## English
+
+Complete Turkish localization for Cities: Skylines II — **24,267 strings, 100% coverage**, base game plus every DLC and creator pack.
+
+### What changed in v2.0.0
+
+v1 was a stop-gap: a PowerShell script that copied loose JSON files into place for the I18N Everywhere mod.
+**v2.0.0 replaces it entirely** with a standalone C# mod:
+
+| | v1 (legacy) | v2.0.0 |
+| --- | --- | --- |
+| Form | PowerShell script + loose JSON | One DLL with the translation embedded |
+| Required mods | I18N Everywhere | **None** |
+| In game | Overwrote the English locale | A native **Türkçe** entry in the language list |
+| Game patch | 1.6.0f1 (24,194 strings) | **1.6.2f1 (24,267 strings)** |
+| Casing bugs | "GRAFıK", "HAKKıNDA" | **GRAFİK**, **HAKKINDA** |
+
+### Features
+
+- **Fully standalone.** The translation is embedded in the DLL. No I18N Everywhere, no other mod.
+- **A real language entry.** Registers the `tr-TR` locale, so **Türkçe** appears under `Options > Interface > Language`
+  like any built-in language. English is left untouched and you can switch back at any time.
+- **Turkish on first launch**, then your choice is respected.
+- **Conflict safe.** If another mod already registered `tr-TR`, nothing throws: entries are merged and this mod's take precedence (logged at info level).
+- **Survives locale reloads.** The game drops mod-added locales on a bulk asset reload; the mod registers itself again.
+- **Crash-safe culture handling.** The thread culture becomes `tr-TR` only while Turkish is active, keeps invariant number
+  formatting (culture-blind `float.Parse("1.5")` calls in other mods keep working) and is restored when you switch language.
+- **Correct Turkish casing** (İ/i, I/ı) and consistent city-planning terminology.
+
+### Installation
+
+**1. Paradox Mods (recommended, one click):** open `Paradox Mods` in game, find *Turkish Localization (Türkçe Çeviri)*,
+press **Subscribe**, enable it and restart the game.
+
+**2. Manual:** download `TurkishLocalization.dll` from [Releases](../../releases) and place it at (create the folders if needed)
+
+```text
+%LOCALAPPDATA%Low\Colossal Order\Cities Skylines II\Mods\TurkishLocalization\TurkishLocalization.dll
 ```
 
-Klasörler yoksa oluşturun. Adres çubuğuna `%LOCALAPPDATA%Low\Colossal Order\Cities Skylines II` yazarak da gidebilirsiniz.
-</details>
+The game switches to Turkish on its own. If it does not: `Options > Interface > Language > Türkçe`.
 
-Kurduktan sonra:
+> **Coming from v1?** Delete `...\Cities Skylines II\Mods\TurkishLang`. It is obsolete and keeps turning the *English*
+> locale Turkish for as long as it exists.
 
-1. Oyunu başlatın (açıksa yeniden başlatın).
-2. I18N Everywhere modunun etkin olduğundan emin olun.
-3. **Options / Seçenekler** ekranına girip çıkın — çeviri o anda devreye girer.
+### Building
 
-## Önemli
-
-> **Daha önce başka bir Türkçe çeviri kurduysanız (örn. Calypso) tamamen kaldırın.**
-> İki çeviri aynı anda yüklüyken metinler karışır. Kurulum betiği bunları otomatik bulup
-> `Cities Skylines II\TurkishLang-Yedek\` altına taşır; isterseniz oradan geri alabilirsiniz.
-
-Dosyanın adı neden `en-US.json`? Oyunda Türkçe dil seçeneği yok. I18N Everywhere, İngilizce metinlerin
-üzerine yazarak çalışır — bu yüzden dosya İngilizce yerel adıyla durur, oyun dili İngilizce kalmalıdır.
-
-## Kaldırma
+Requires the [.NET SDK](https://dotnet.microsoft.com/download) (6+) and an installed copy of the game.
 
 ```powershell
-irm https://raw.githubusercontent.com/KaanBahaSever/cs2-turkce-yama/main/uninstall.ps1 | iex
+dotnet build src -c Release -p:ManagedPath="<game folder>\Cities2_Data\Managed"
 ```
 
-Ya da `Mods\TurkishLang` klasörünü silin.
+`-p:ManagedPath` can be omitted when `CSII_MANAGEDPATH` is set (official modding toolchain) or the game lives in the default Steam library.
+Add `-p:Deploy=true` to copy the DLL into the game's `Mods` folder. Publishing to Paradox Mods: see [PUBLISHING.md](PUBLISHING.md).
 
-## Hata bildirimi
+### Patch update guide for maintainers
 
-Yanlış veya eksik bir çeviri görürseniz [issue açın](../../issues). Şunları eklerseniz çok hızlı düzelir:
-ekran görüntüsü ve metnin geçtiği yer (hangi panel/menü).
+When a new CS2 patch drops:
 
-## Katkı
+1. **Drop the dump.** Copy the freshly dumped split files (`[A]0- en-US.json`, `[A]1- en-US.json`, … any number of them)
+   into `updates/incoming_en/`.
+2. **Extract the diff.**
 
-`en-US.json` düz bir `anahtar: değer` JSON dosyasıdır. **Yalnızca sağdaki değerleri** düzenleyin;
-anahtarlara, `{DEĞİŞKEN}` yer tutucularına ve `<icon:...>` / `<inputAction:...>` etiketlerine dokunmayın.
+   ```powershell
+   python tools/check_updates.py
+   ```
 
-## Terimler
+   The tool merges the split files, compares them with `src/Localization/tr-TR.json` and `originals/en-US/en-US.json`, and writes
+   `updates/keys_to_translate.json` with three lists: **new** keys, **modified** keys (English source changed — the old English
+   and the old Turkish are included) and **removed** keys.
+3. **Translate.** Fill in the empty `"tr"` field of every entry in that file:
 
-| İngilizce | Türkçe |
-|---|---|
-| Zoning | İmar |
-| Low / Medium / High Density | Düşük / Orta / Yüksek Yoğunluklu |
-| Mixed-Use | Karma Kullanım |
-| Sewage | Atık Su |
-| Landfill | Katı Atık Depolama Sahası |
-| Grid (elektrik/su) | Şebeke |
-| Roundabout | Döner Kavşak |
-| Deathcare | Defin ve Cenaze Hizmetleri |
-| Commuter | Banliyö Yolcusu |
-| Upkeep | Bakım Gideri |
-| Milestone | Gelişim Seviyesi |
-| Signature Building | İmza Yapı |
+   ```json
+   "Assets.NAME[FoodTruck01]": { "en": "Food truck 01", "tr": "Yemek Kamyoneti 01" }
+   ```
+
+   Leave `{TOKENS}`, `<tags>` and `\n` line breaks exactly as they are.
+4. **Merge.**
+
+   ```powershell
+   python tools/check_updates.py --merge updates/keys_to_translate.json
+   ```
+
+   The tool validates first: a missing translation, a broken token/tag/line break or a casing error such as "GRAFıK" makes it
+   stop **without changing anything** and list the offending keys. Otherwise it updates `src/Localization/tr-TR.json`, drops
+   removed keys, rolls `originals/en-US/` forward to the new baseline and empties `updates/incoming_en/`.
+   (A flat `{ "key": "Turkish" }` file is accepted as well.)
+5. **Validate and build.**
+
+   ```powershell
+   python tools/check_updates.py --validate
+   dotnet build src -c Release -p:ManagedPath="<game folder>\Cities2_Data\Managed"
+   ```
+
+6. **Bump the version and publish.** Raise the version in `mod.json`, `src/TurkishLocalization.csproj` and
+   `Properties/PublishConfiguration.xml`, write the `ChangeLog`, then follow [PUBLISHING.md](PUBLISHING.md).
+
+### License and credits
+
+Translation and mod by Kaan Baha Sever. Cities: Skylines II is a trademark of Paradox Interactive / Colossal Order;
+the English source strings under `originals/` belong to them and are included only as a translation reference.

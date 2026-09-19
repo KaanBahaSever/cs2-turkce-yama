@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Publish>
+	<!-- Empty = first upload: Paradox Mods assigns a new id. ModPublisher only PRINTS it ("Mod published with Id=...");
+	     paste that number here afterwards - NewVersion and Update refuse to run without it. -->
+	<ModId Value="" />
+	<DisplayName Value="Turkish Localization (Türkçe Çeviri)" />
+	<ShortDescription Value="Cities: Skylines II için eksiksiz Türkçe çeviri. Başka hiçbir mod gerektirmez." />
+	<LongDescription>
+# Türkçe Çeviri
+
+Cities: Skylines II'nin tamamı için Türkçe yerelleştirme: arayüz, ekonomi ve istatistik panelleri, öğreticiler, oyun içi sözlük, politikalar, Chirper gönderileri, harita ve düzenleyici araçları ile tüm yapı adları ve açıklamaları.
+
+## Özellikler
+- **Bağımsız çalışır.** I18N Everywhere ya da başka bir mod gerekmez; çevirinin tamamı modun içine gömülüdür.
+- **Gerçek bir dil seçeneği ekler.** Seçenekler > Arayüz > Dil listesinde "Türkçe" diğer diller gibi görünür. İngilizce metinlerin üzerine yazmaz; istediğiniz an başka bir dile dönebilirsiniz.
+- **24.000'den fazla satır**, temel oyun ile tüm DLC ve yaratıcı paketlerini kapsar.
+- Şehir planlama terimleri tutarlıdır: İmar, Atık Su, Döner Kavşak, Şebeke, Karma Kullanım, Gelişim Seviyesi...
+- Türkçe büyük/küçük harf kuralları gözetilmiştir (İ/i, I/ı); "HAKKıNDA" gibi bozuk başlıklar yoktur.
+- Başka bir Türkçe çeviri yüklüyse çakışmaz: anahtarlar güvenle birleştirilir, bu modun metinleri öncelik alır.
+
+## Kullanım
+Modu etkinleştirip oyunu başlatın. İlk açılışta dil otomatik olarak Türkçe olur (v2.0.0 ile gelen bağımsız sürüm). Dilediğiniz zaman Seçenekler > Arayüz > Dil bölümünden değiştirebilirsiniz.
+
+Eski sürümü (I18N Everywhere ile çalışan "TurkishLang" klasörü) kullanıyorsanız silin; artık gerekmiyor.
+
+## Hata bildirimi
+Yanlış ya da eksik bir çeviri görürseniz GitHub üzerinden bildirin. Ekran görüntüsü ve metnin geçtiği panel çok yardımcı olur.
+
+---
+**English:** Complete, standalone Turkish localization. Registers a native "Türkçe" language in the options menu; no other mod required.
+	</LongDescription>
+	<!-- Relative to the repository root (the publish target runs ModPublisher from there). Regenerate: python tools/make_thumbnail.py -->
+	<Thumbnail Value="Properties/Thumbnail.png" />
+	<Tag Value="Code Mod" />
+	<ForumLink Value="" />
+	<ModVersion Value="2.0.0" />
+	<GameVersion Value="1.*" />
+	<ChangeLog>
+## v2.0.0 - Bağımsız mod / Standalone rewrite
+
+**Türkçe**
+- Baştan yazıldı: artık **tamamen bağımsız bir C# modu**. Çevirinin tamamı DLL'in içine gömülü; I18N Everywhere dahil hiçbir ek mod gerekmiyor.
+- v1'deki PowerShell kurulum betiği ve elle kopyalanan JSON dosyaları kaldırıldı. Abone olmak yeterli.
+- Seçenekler > Arayüz > Dil listesine gerçek bir **Türkçe** seçeneği eklenir; İngilizce metinlerin üzerine yazılmaz.
+- Oyunun **1.6.2f1** yaması desteklenir: **24.267 satır**, %100 kapsam (yemek kamyonetleri, The Hub, Emerald Estuary, doku boyama araçları ve yeni düzenleyici seçenekleri dahil).
+- Türkçe büyük/küçük harf hataları giderildi: "GRAFıK", "HAKKıNDA" yerine **GRAFİK**, **HAKKINDA**.
+- Çökmeye karşı güvenli kültür ayarı: tr-TR kültürü yalnızca Türkçe etkinken uygulanır, sayı biçimi değişmez (invariant) tutulur, dil değişince eski kültür geri yüklenir.
+- Başka bir Türkçe çeviri yüklüyse çakışmaz; anahtarlar birleştirilir. Oyun dil listesini yeniden kurduğunda mod kendini tekrar kaydeder.
+
+**English**
+- Complete rewrite into a **standalone C# mod**. The whole translation is embedded in the DLL; no I18N Everywhere, no other dependency.
+- The v1 PowerShell installer and loose JSON files are gone. Subscribing is all it takes.
+- Adds a native **Türkçe** entry to Options > Interface > Language instead of overwriting English.
+- Supports game patch **1.6.2f1**: **24,267 strings**, 100% coverage.
+- Turkish casing fixed everywhere ("GRAFİK", "HAKKINDA" instead of "GRAFıK", "HAKKıNDA").
+- Crash-safe culture handling: tr-TR is applied only while Turkish is active, keeps invariant number formatting, and is restored when the language changes.
+- Conflict safe with other Turkish translations; re-registers itself when the game rebuilds its locale list.
+	</ChangeLog>
+	<ExternalLink Type="github" Url="https://github.com/KaanBahaSever/cs2-turkce-yama" />
+	<!-- Public | Unlisted (reachable by link only) | Private. Anything else silently means Public. -->
+	<AccessLevel Value="Public" />
+</Publish>

@@ -1,0 +1,126 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <!-- Same target as the official mod template (Unity Mono, .NET Framework 4.x profile). -->
+    <TargetFramework>net48</TargetFramework>
+    <AssemblyName>TurkishLocalization</AssemblyName>
+    <RootNamespace>TurkishLocalization</RootNamespace>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <Version>2.0.0</Version>
+    <Authors>Kaan Baha Sever</Authors>
+    <Description>Standalone Turkish localization for Cities: Skylines II</Description>
+    <Configurations>Debug;Release</Configurations>
+    <Deterministic>true</Deterministic>
+    <!-- Line numbers in stack traces without shipping a separate .pdb -->
+    <DebugType>embedded</DebugType>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <SatelliteResourceLanguages>none</SatelliteResourceLanguages>
+  </PropertyGroup>
+
+  <!--
+    Where the game's managed assemblies live. Resolution order:
+      1. dotnet build -p:ManagedPath="...\Cities2_Data\Managed"
+      2. CSII_MANAGEDPATH environment variable (set by the official modding toolchain)
+      3. the default Steam / Xbox locations
+  -->
+  <PropertyGroup>
+    <ManagedPath Condition="'$(ManagedPath)' == '' And '$(CSII_MANAGEDPATH)' != ''">$(CSII_MANAGEDPATH)</ManagedPath>
+    <ManagedPath Condition="'$(ManagedPath)' == '' And Exists('C:\Program Files (x86)\Steam\steamapps\common\Cities Skylines II\Cities2_Data\Managed\Game.dll')">C:\Program Files (x86)\Steam\steamapps\common\Cities Skylines II\Cities2_Data\Managed</ManagedPath>
+    <ManagedPath Condition="'$(ManagedPath)' == '' And Exists('C:\XboxGames\Cities- Skylines II - PC Edition\Content\Cities2_Data\Managed\Game.dll')">C:\XboxGames\Cities- Skylines II - PC Edition\Content\Cities2_Data\Managed</ManagedPath>
+    <GameUserDataPath Condition="'$(GameUserDataPath)' == ''">$(USERPROFILE)\AppData\LocalLow\Colossal Order\Cities Skylines II</GameUserDataPath>
+    <RepoRoot>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..'))</RepoRoot>
+    <PdxConfiguration Condition="'$(PdxConfiguration)' == ''">$(RepoRoot)\Properties\PublishConfiguration.xml</PdxConfiguration>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="Game"><HintPath>$(ManagedPath)\Game.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Colossal.Core"><HintPath>$(ManagedPath)\Colossal.Core.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Colossal.Localization"><HintPath>$(ManagedPath)\Colossal.Localization.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Colossal.Logging"><HintPath>$(ManagedPath)\Colossal.Logging.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Colossal.IO.AssetDatabase"><HintPath>$(ManagedPath)\Colossal.IO.AssetDatabase.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Newtonsoft.Json"><HintPath>$(ManagedPath)\Newtonsoft.Json.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.CoreModule"><HintPath>$(ManagedPath)\UnityEngine.CoreModule.dll</HintPath><Private>false</Private></Reference>
+  </ItemGroup>
+
+  <!-- The whole translation travels inside the DLL: no loose files, no other mod required. -->
+  <ItemGroup>
+    <EmbeddedResource Include="Localization\tr-TR.json" LogicalName="TurkishLocalization.Localization.tr-TR.json" WithCulture="false" />
+  </ItemGroup>
+
+  <Target Name="CheckGameAssemblies" BeforeTargets="ResolveAssemblyReferences">
+    <Error Condition="'$(ManagedPath)' == '' Or !Exists('$(ManagedPath)\Game.dll')"
+           Text="Game assemblies not found. Build with:  dotnet build src -c Release -p:ManagedPath=&quot;&lt;game folder&gt;\Cities2_Data\Managed&quot;  (or set the CSII_MANAGEDPATH environment variable)." />
+  </Target>
+
+  <!-- dotnet build src -c Release -p:Deploy=true   copies the mod into the game's local Mods folder. -->
+  <Target Name="DeployToGame" AfterTargets="Build" Condition="'$(Deploy)' == 'true'">
+    <PropertyGroup>
+      <LocalModDir>$(GameUserDataPath)\Mods\$(AssemblyName)</LocalModDir>
+    </PropertyGroup>
+    <MakeDir Directories="$(LocalModDir)" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(LocalModDir)" />
+    <Message Importance="high" Text="Deployed to $(LocalModDir)" />
+  </Target>
+
+  <!--
+    Paradox Mods publishing (see PUBLISHING.md). Runs the ModPublisher tool that ships with the game:
+
+      dotnet build src -c Release -p:PdxCommand=Publish       first upload      (ModId must be empty)
+      dotnet build src -c Release -p:PdxCommand=NewVersion    new mod version   (ModId + ChangeLog required)
+      dotnet build src -c Release -p:PdxCommand=Update        metadata only     (description, thumbnail, links)
+
+    Add -p:PdxDryRun=true to see exactly what would run without contacting Paradox Mods.
+  -->
+  <Target Name="PdxPublish" AfterTargets="Build;DeployToGame" Condition="'$(PdxCommand)' != ''">
+    <PropertyGroup>
+      <GameDataDir>$([System.IO.Path]::GetFullPath('$(ManagedPath)\..'))</GameDataDir>
+      <ModPublisherExe Condition="'$(ModPublisherExe)' == '' And '$(CSII_MODPUBLISHERPATH)' != ''">$(CSII_MODPUBLISHERPATH)</ModPublisherExe>
+      <ModPublisherExe Condition="'$(ModPublisherExe)' == '' And Exists('$(GameDataDir)\Content\Game\.ModdingToolchain\ModPublisher\ModPublisher.exe')">$(GameDataDir)\Content\Game\.ModdingToolchain\ModPublisher\ModPublisher.exe</ModPublisherExe>
+      <ModPublisherExe Condition="'$(ModPublisherExe)' == '' And Exists('$(GameDataDir)\StreamingAssets\~Tooling~\ModPublisher\ModPublisher.exe')">$(GameDataDir)\StreamingAssets\~Tooling~\ModPublisher\ModPublisher.exe</ModPublisherExe>
+      <PdxContentDir>$(MSBuildProjectDirectory)\bin\PdxContent</PdxContentDir>
+    </PropertyGroup>
+
+    <Error Condition="'$(PdxCommand)' != 'Publish' And '$(PdxCommand)' != 'NewVersion' And '$(PdxCommand)' != 'Update'"
+           Text="PdxCommand must be Publish, NewVersion or Update (got '$(PdxCommand)')." />
+    <Error Condition="'$(ModPublisherExe)' == '' Or !Exists('$(ModPublisherExe)')"
+           Text="ModPublisher.exe not found. Pass -p:ModPublisherExe=&quot;&lt;game folder&gt;\Cities2_Data\Content\Game\.ModdingToolchain\ModPublisher\ModPublisher.exe&quot;" />
+    <Error Condition="!Exists('$(PdxConfiguration)')" Text="Publish configuration not found: $(PdxConfiguration)" />
+
+    <XmlPeek XmlInputPath="$(PdxConfiguration)" Query="/Publish/ModId/@Value">
+      <Output TaskParameter="Result" PropertyName="PdxModId" />
+    </XmlPeek>
+    <XmlPeek XmlInputPath="$(PdxConfiguration)" Query="/Publish/ModVersion/@Value">
+      <Output TaskParameter="Result" PropertyName="PdxModVersion" />
+    </XmlPeek>
+    <XmlPeek XmlInputPath="$(PdxConfiguration)" Query="/Publish/Thumbnail/@Value">
+      <Output TaskParameter="Result" PropertyName="PdxThumbnail" />
+    </XmlPeek>
+
+    <Error Condition="'$(PdxCommand)' == 'Publish' And '$(PdxModId)' != '' And '$(PdxModId)' != '0'"
+           Text="ModId is already set to $(PdxModId): this mod has been published before. Use -p:PdxCommand=NewVersion (or Update for metadata only)." />
+    <Error Condition="'$(PdxCommand)' != 'Publish' And ('$(PdxModId)' == '' Or '$(PdxModId)' == '0')"
+           Text="ModId is empty. Paste the id printed by the first upload ('Mod published with Id=...') into Properties/PublishConfiguration.xml." />
+    <Error Condition="'$(PdxModVersion)' != '$(Version)'"
+           Text="Version mismatch: PublishConfiguration.xml says $(PdxModVersion) but the project builds $(Version)." />
+    <!-- ModPublisher silently swaps in its own default image when the thumbnail is missing; fail loudly instead. -->
+    <Error Condition="'$(PdxThumbnail)' == '' Or !Exists('$(RepoRoot)\$(PdxThumbnail)')"
+           Text="Thumbnail '$(PdxThumbnail)' not found under $(RepoRoot). Run: python tools/make_thumbnail.py" />
+
+    <!-- Everything inside the content folder is uploaded, so stage a clean one holding just the mod. -->
+    <RemoveDir Directories="$(PdxContentDir)" />
+    <MakeDir Directories="$(PdxContentDir)" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(PdxContentDir)" />
+
+    <PropertyGroup>
+      <PdxCommandLine>"$(ModPublisherExe)" $(PdxCommand) "$(PdxConfiguration)" -c "$(PdxContentDir)" -v</PdxCommandLine>
+    </PropertyGroup>
+    <Message Importance="high" Text="Paradox Mods: $(PdxCommand)  v$(PdxModVersion)  ModId='$(PdxModId)'" />
+    <Message Importance="high" Text="  $(PdxCommandLine)" />
+    <Message Importance="high" Condition="'$(PdxDryRun)' == 'true'" Text="  DRY RUN - nothing was sent." />
+    <!-- Working directory = repository root: relative paths in the configuration (thumbnail, screenshots) resolve from there. -->
+    <Exec Condition="'$(PdxDryRun)' != 'true'" Command="$(PdxCommandLine)" WorkingDirectory="$(RepoRoot)" LogStandardErrorAsError="true" />
+  </Target>
+
+</Project>
