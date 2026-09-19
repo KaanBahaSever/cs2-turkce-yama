@@ -43,7 +43,8 @@ Yanlış ya da eksik bir çeviri görürseniz GitHub üzerinden bildirin. Ekran 
 - v1'deki PowerShell kurulum betiği ve elle kopyalanan JSON dosyaları kaldırıldı. Abone olmak yeterli.
 - Seçenekler > Arayüz > Dil listesine gerçek bir **Türkçe** seçeneği eklenir; İngilizce metinlerin üzerine yazılmaz.
 - Oyunun **1.6.2f1** yaması desteklenir: **24.267 satır**, %100 kapsam (yemek kamyonetleri, The Hub, Emerald Estuary, doku boyama araçları ve yeni düzenleyici seçenekleri dahil).
-- Türkçe büyük/küçük harf hataları giderildi: "GRAFıK", "HAKKıNDA" yerine **GRAFİK**, **HAKKINDA**.
+- Türkçe büyük harf hataları kökünden giderildi: oyunun BÜYÜK HARFLE gösterdiği tüm başlıklar artık doğru ("PARADOX HESABı", "GRAFIK" yerine **PARADOX HESABI**, **GRAFİK**). Yabancı özel adlar (CITIES: SKYLINES) korunur.
+- Dil listesinde **Türkçe** doğru görünür (oyun listeyi modlardan önce donduruyordu).
 - Çökmeye karşı güvenli kültür ayarı: tr-TR kültürü yalnızca Türkçe etkinken uygulanır, sayı biçimi değişmez (invariant) tutulur, dil değişince eski kültür geri yüklenir.
 - Başka bir Türkçe çeviri yüklüyse çakışmaz; anahtarlar birleştirilir. Oyun dil listesini yeniden kurduğunda mod kendini tekrar kaydeder.
 
@@ -52,7 +53,8 @@ Yanlış ya da eksik bir çeviri görürseniz GitHub üzerinden bildirin. Ekran 
 - The v1 PowerShell installer and loose JSON files are gone. Subscribing is all it takes.
 - Adds a native **Türkçe** entry to Options > Interface > Language instead of overwriting English.
 - Supports game patch **1.6.2f1**: **24,267 strings**, 100% coverage.
-- Turkish casing fixed everywhere ("GRAFİK", "HAKKINDA" instead of "GRAFıK", "HAKKıNDA").
+- Turkish capitals fixed at the root: every heading the game shows in ALL CAPS is now correct ("PARADOX HESABI", "GRAFİK" instead of "PARADOX HESABı", "GRAFIK"). Foreign proper nouns (CITIES: SKYLINES) are preserved.
+- **Türkçe** shows correctly in the language list (the game froze that list before mods load).
 - Crash-safe culture handling: tr-TR is applied only while Turkish is active, keeps invariant number formatting, and is restored when the language changes.
 - Conflict safe with other Turkish translations; re-registers itself when the game rebuilds its locale list.
 	</ChangeLog>

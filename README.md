@@ -36,7 +36,10 @@ v1, I18N Everywhere modunun okuduğu JSON dosyalarını bir PowerShell betiğiyl
   İngilizce metinlerin üzerine yazmaz; istediğiniz an başka bir dile dönebilirsiniz.
 - **İlk açılışta otomatik Türkçe.** Sonrasında seçiminize dokunmaz.
 - **Çakışmaya dayanıklı.** Başka bir mod `tr-TR` dilini zaten eklediyse hata vermez; anahtarlar birleştirilir, bu modun metinleri öncelik alır.
-- **Doğru Türkçe harfler.** İ/i ve I/ı kurallarına uyulmuştur.
+- **Doğru Türkçe büyük harfler.** Oyun, BÜYÜK HARFLE gösterdiği başlıkları dilden bağımsız kurallarla büyütür
+  ("PARADOX HESABı", "GRAFIK"). Mod bu adımı Türkçe etkinken düzeltir: **PARADOX HESABI**, **GRAFİK**, **AYARLARI**.
+  Yabancı özel adlar (CITIES: SKYLINES, CHRISTINA, PELICAN BIOFUEL) uluslararası yazımını korur.
+- **Dil listesinde Türkçe.** Oyun dil listesini modlar yüklenmeden önce dondurur; mod sayfayı yeniden kurdurur.
 - **Çökmeye karşı güvenli kültür ayarı.** `tr-TR` kültürü yalnızca Türkçe etkinken uygulanır, sayı biçimi değişmez tutulur
   (başka modlardaki `float.Parse("1.5")` bozulmaz) ve dil değişince eski kültür geri yüklenir.
 - **Tutarlı terminoloji.** İmar, Atık Su, Döner Kavşak, Şebeke, Karma Kullanım, Gelişim Seviyesi…
@@ -122,8 +125,11 @@ Yeni bir CS2 yaması çıktığında çeviriyi güncellemenin adımları:
 anahtarlara, `{DEĞİŞKEN}` yer tutucularına ve `<icon:…>` / `<inputAction:…>` etiketlerine dokunmayın.
 Yanlış ya da eksik çeviri için [issue açın](../../issues) — ekran görüntüsü ve metnin geçtiği panel çok yardımcı olur.
 
-Not: Oyun bazı başlıkları yalnızca ASCII harfleri büyüterek gösterir (`ı ş ğ ü ö ç` küçük kalır).
-Bu yüzden ayarlar sekmeleri gibi başlıklar dosyada zaten büyük harfle yazılıdır (`HAKKINDA`, `OYNANIŞ`).
+Not: Metinleri dosyada **normal yazımıyla** tutun ("Paradox Hesabı"). Oyun bunları kendisi büyük harfe çevirir ve bunu
+`ToUpperInvariant()` ile yaptığı için `ı` küçük kalır, `i` de `I` olurdu; mod bu adımı çalışma anında düzeltir
+(`src/TurkishCasing.cs`). İki istisna dosyada bilerek büyük harfle yazılıdır: ayarlar sekmeleri (`HAKKINDA`, `OYNANIŞ` —
+düzeltme devre dışı kalırsa yedek) ve JavaScript'in büyüttüğü hata penceresi düğmeleri (`Common.ERROR_ACTION[...]`).
+`python tools/fix_upper_i.py` dosyada "HESABı" türü bozuk sözcük kalıp kalmadığını denetler.
 
 ### Depo yapısı
 
@@ -131,10 +137,15 @@ Bu yüzden ayarlar sekmeleri gibi başlıklar dosyada zaten büyük harfle yazı
 src/                        C# modu
   Mod.cs                    IMod: tr-TR dilini kaydeder
   TurkishLocalization.csproj
+  TurkishCasing.cs          Türkçe i/ı büyük harf kuralları
+  TurkishCaseMapper.cs      Oyunun büyük harf geri çağrısına takılan sarmalayıcı
   Localization/tr-TR.json   Türkçe çeviri (DLL'e gömülür)
+  Localization/protected-words.txt  Korunan özel adlar (üretilir)
 originals/en-US/            Çevirinin dayandığı İngilizce taban (parça dosyalar + en-US.json)
 updates/incoming_en/        Yeni yama dökümleri buraya
 tools/check_updates.py      Güncelleme aracı
+tools/fix_upper_i.py        "HESABı" türü bozuk büyük harfli sözcükleri bulur/onarır
+tools/build_protected_words.py  Büyük harfte korunacak yabancı özel ad listesini üretir
 tools/make_thumbnail.py     Properties/Thumbnail.png üretir
 Properties/                 Paradox Mods yayın ayarları ve küçük resim
 mod.json                    Mod kimlik bilgileri
@@ -170,7 +181,11 @@ v1 was a stop-gap: a PowerShell script that copied loose JSON files into place f
 - **Survives locale reloads.** The game drops mod-added locales on a bulk asset reload; the mod registers itself again.
 - **Crash-safe culture handling.** The thread culture becomes `tr-TR` only while Turkish is active, keeps invariant number
   formatting (culture-blind `float.Parse("1.5")` calls in other mods keep working) and is restored when you switch language.
-- **Correct Turkish casing** (İ/i, I/ı) and consistent city-planning terminology.
+- **Correct Turkish capitals.** The game upper-cases headings with culture-invariant rules ("PARADOX HESABı", "GRAFIK").
+  While Turkish is active the mod corrects that step: **PARADOX HESABI**, **GRAFİK**. Foreign proper nouns
+  (CITIES: SKYLINES, CHRISTINA, PELICAN BIOFUEL) keep their international spelling.
+- **Türkçe in the language list.** The game freezes that list before mods load; the mod has the page rebuilt.
+- Consistent city-planning terminology.
 
 ### Installation
 

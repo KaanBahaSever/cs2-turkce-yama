@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using Colossal.Localization;
@@ -10,7 +11,10 @@ using Colossal.Logging;
 using Game;
 using Game.Modding;
 using Game.SceneFlow;
+using Game.Settings;
+using Game.UI.Menu;
 using Newtonsoft.Json;
+using Unity.Entities;
 using UnityEngine;
 
 namespace TurkishLocalization
@@ -35,6 +39,7 @@ namespace TurkishLocalization
         private MemorySource m_Source;
         private bool m_LocaleAddedByUs;
         private bool m_Busy;
+        private string m_DropdownLocales; // locale set the Interface options page was last rebuilt for
 
         private CultureInfo m_TurkishCulture;
         private CultureInfo m_PreviousCulture;
@@ -55,12 +60,15 @@ namespace TurkishLocalization
                 }
 
                 m_Entries = ReadEmbeddedTranslation();
-                // Shown by the language selector and by anything that looks a language name up by key.
-                m_Entries["Menu.LANGUAGE[" + kLocaleId + "]"] = kLocalizedName;
-                m_Entries["Common.LANGUAGE[" + kLocaleId + "]"] = kLocalizedName;
                 log.InfoFormat("Read {0} Turkish entries from the embedded resource.", m_Entries.Count);
+                // Note: no "LANGUAGE[tr-TR]" style key is added. Neither Game.dll nor the UI reads one; the name in
+                // the language selector is solely the localizedName argument of AddLocale().
 
                 m_TurkishCulture = CreateTurkishCulture();
+
+                // Before anything is (re)rendered in Turkish, so the very first frame is already cased correctly.
+                TurkishCasing.LoadProtectedWords(typeof(Mod).Assembly);
+                InstallCaseMapping();
 
                 Register();
 
@@ -70,6 +78,8 @@ namespace TurkishLocalization
                 ActivateOnFirstRun();
                 ReapplySavedLocale();
                 UpdateCulture();
+                // Last on purpose: if a game update ever breaks this call, everything above has already happened.
+                RefreshLanguageDropdown();
                 WarnAboutLegacyInstall();
             }
             catch (Exception ex)
@@ -102,6 +112,8 @@ namespace TurkishLocalization
             }
             finally
             {
+                TurkishCasing.Enabled = false;
+                UninstallCaseMapping();
                 RestoreCulture();
                 m_Source = null;
                 m_Manager = null;
@@ -249,17 +261,22 @@ namespace TurkishLocalization
         /// <summary>The game drops every locale on a bulk asset reload; put ours back.</summary>
         private void OnSupportedLocalesChanged()
         {
-            if (m_Busy || m_Manager == null || m_Manager.SupportsLocale(kLocaleId))
+            if (m_Busy || m_Manager == null)
             {
                 return;
             }
             m_Busy = true;
             try
             {
-                log.Info("Locale list was rebuilt by the game; registering Turkish again.");
-                m_LocaleAddedByUs = false;
-                Register();
-                ReapplySavedLocale();
+                if (!m_Manager.SupportsLocale(kLocaleId))
+                {
+                    log.Info("Locale list was rebuilt by the game; registering Turkish again.");
+                    m_LocaleAddedByUs = false;
+                    Register();
+                    ReapplySavedLocale();
+                }
+                // Also when another mod added or removed a locale: the game never refreshes the list itself.
+                RefreshLanguageDropdown();
             }
             catch (Exception ex)
             {
@@ -269,6 +286,130 @@ namespace TurkishLocalization
             {
                 m_Busy = false;
             }
+        }
+
+        // ------------------------------------------------------ language dropdown
+
+        /// <summary>
+        /// The game builds every options page - and reads each dropdown's items, exactly once - while the UI boots,
+        /// well before mods are loaded. A locale added later is therefore missing from Options &gt; Interface &gt; Language,
+        /// and with Turkish active the selector has no matching item and renders blank. Rebuilding the page makes a
+        /// fresh dropdown that reads the current locale list.
+        /// </summary>
+        private void RefreshLanguageDropdown()
+        {
+            if (m_Manager == null)
+            {
+                return;
+            }
+            try
+            {
+                EnsureDisplayName();
+                string signature = string.Join("|", m_Manager.GetSupportedLocales());
+                if (signature == m_DropdownLocales)
+                {
+                    return;
+                }
+                if (RebuildInterfacePage())
+                {
+                    m_DropdownLocales = signature;
+                    log.InfoFormat("Language list rebuilt: [{0}]; name of '{1}' = '{2}'; saved locale = '{3}'.",
+                        signature, kLocaleId, m_Manager.GetLocalizedName(kLocaleId),
+                        GameManager.instance?.settings?.userInterface?.locale);
+                }
+                else
+                {
+                    log.Warn("Options UI is not available; the language list was not refreshed.");
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Warn(ex, "Could not refresh the language list.");
+            }
+        }
+
+        // Own non-inlined method: should a game update remove one of these members, the JIT failure surfaces at the
+        // call site, inside the caller's try/catch, instead of taking the caller down with it.
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private static bool RebuildInterfacePage()
+        {
+            OptionsUISystem options = World.DefaultGameObjectInjectionWorld?.GetExistingSystemManaged<OptionsUISystem>();
+            InterfaceSettings ui = GameManager.instance?.settings?.userInterface;
+            if (options == null || ui == null)
+            {
+                return false;
+            }
+            options.RegisterSetting(ui, InterfaceSettings.kName); // "Interface": the very call the game makes at boot
+            return true;
+        }
+
+        /// <summary>
+        /// The selector shows LocalizationManager.GetLocalizedName(id) and nothing else. If another mod registered
+        /// tr-TR first without a usable name, AddLocale cannot change it any more, so set it directly.
+        /// </summary>
+        private void EnsureDisplayName()
+        {
+            string name = m_Manager.GetLocalizedName(kLocaleId);
+            if (!m_Manager.SupportsLocale(kLocaleId) || (!string.IsNullOrWhiteSpace(name) && name != kLocaleId))
+            {
+                return;
+            }
+            FieldInfo field = typeof(LocalizationManager).GetField("m_LocaleIdToLocalizedName", BindingFlags.Instance | BindingFlags.NonPublic);
+            if (field?.GetValue(m_Manager) is Dictionary<string, string> names)
+            {
+                names[kLocaleId] = kLocalizedName;
+                log.InfoFormat("Display name of '{0}' was '{1}'; set to '{2}'.", kLocaleId, name, kLocalizedName);
+            }
+        }
+
+        // ----------------------------------------------------------- upper-casing
+
+        // Two levels on purpose: a missing cohtml type fails when the *Core method is JIT-compiled, i.e. inside this try.
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private static void InstallCaseMapping()
+        {
+            try
+            {
+                InstallCaseMappingCore();
+            }
+            catch (Exception ex)
+            {
+                log.Warn(ex, "Turkish case mapping could not be installed; all-caps text keeps the game's invariant casing.");
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private static void InstallCaseMappingCore()
+        {
+            int wrapped = TurkishCaseMapper.Install();
+            if (wrapped < 0)
+            {
+                log.Warn("Gameface case-mapping hook point not found; all-caps text keeps the game's invariant casing.");
+            }
+            else if (wrapped > 0)
+            {
+                log.InfoFormat("Turkish case mapping installed on {0} text transformation manager(s); {1} protected names.",
+                    wrapped, TurkishCasing.ProtectedCount);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private static void UninstallCaseMapping()
+        {
+            try
+            {
+                UninstallCaseMappingCore();
+            }
+            catch (Exception ex)
+            {
+                log.Warn(ex, "Could not remove Turkish case mapping.");
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private static void UninstallCaseMappingCore()
+        {
+            TurkishCaseMapper.Uninstall();
         }
 
         private void OnActiveDictionaryChanged()
@@ -343,6 +484,10 @@ namespace TurkishLocalization
         /// <summary>Turkish culture while Turkish is the active language, the original culture otherwise.</summary>
         private void UpdateCulture()
         {
+            // Turkish i rules only while Turkish is on screen; English and every other language keep the game's casing.
+            TurkishCasing.Enabled = m_Manager != null && m_Manager.activeLocaleId == kLocaleId;
+            InstallCaseMapping(); // no-op once installed; picks up a manager created after we loaded
+
             if (m_Manager != null && m_Manager.activeLocaleId == kLocaleId)
             {
                 ApplyCulture();

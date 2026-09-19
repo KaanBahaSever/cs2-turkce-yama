@@ -36,8 +36,14 @@ CONSOLIDATED_NAME = "en-US.json"
 
 TOKEN_RE = re.compile(r"\{[^{}]*\}")
 TAG_RE = re.compile(r"<[^<>]*>")
-# an all-caps word that still contains a lowercase dotless/dotted i  ->  "GRAFıK", "HAKKıNDA"
-BROKEN_CASE_RE = re.compile(r"(?<![a-zçğıöşü])[A-ZÇĞİÖŞÜ]{2,}[ıi][A-ZÇĞİÖŞÜ]+|(?<![A-Za-zçğıöşüÇĞİÖŞÜ])[A-ZÇĞİÖŞÜ]+[ıi][A-ZÇĞİÖŞÜ]{2,}")
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import fix_upper_i  # noqa: E402  (all-caps words with a stray lowercase i/ı, anywhere in the word)
+
+
+def has_broken_case(text):
+    """True for "HESABı", "BAŞLıK", "ıŞIK", "GRAFiK"; False for PlayStation, DrawBridge and normal-case text."""
+    return bool(fix_upper_i.fix_text(text)[1])
 
 
 # --------------------------------------------------------------------------- io
@@ -100,7 +106,7 @@ def structure_problems(english, turkish):
         problems.append("markdown")
     if english.strip() and not turkish.strip():
         problems.append("empty")
-    if BROKEN_CASE_RE.search(turkish) and not BROKEN_CASE_RE.search(english):
+    if has_broken_case(turkish):
         problems.append("turkish-case")
     return problems
 
@@ -230,6 +236,9 @@ def cmd_merge(incoming_dir, translated_path, allow_partial, keep_removed):
     write_json(BASELINE_PATH, new_en)
     if os.path.exists(REPORT_PATH):
         os.remove(REPORT_PATH)
+    # new brands / names may have arrived: refresh the list the mod uses to keep their casing international
+    import build_protected_words
+    build_protected_words.main()
 
     print("Merged %d translated keys; dropped %d removed keys." % (applied, 0 if keep_removed else len(removed)))
     print("Translation : %d / %d keys (%s)" % (
