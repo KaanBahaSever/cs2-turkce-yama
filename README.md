@@ -3,7 +3,38 @@
 Cities: Skylines II için eksiksiz ve bağımsız Türkçe yerelleştirme modu.
 
 * **Uyumlu Sürüm:** Oyun `1.6.*` - 1.6.2f1 ile test edildi (24.267 anahtar/metin)
+* **DLC Desteği:** Mevcut tüm ek paketler ve radyo istasyonlarıyla tam uyumludur.
 * **Bağımsız:** I18n EveryWhere veya başka hiçbir yardımcı moda ihtiyaç duymaz.
+
+<details>
+<summary><b>Desteklenen DLC ve Paketler</b> (Görmek için tıklayın)</summary>
+
+* Atmospheric Piano Radio
+* Bridges & Ports
+* City Stations
+* Cloud Lounge FM Radio
+* Cold Wave Radio
+* CS1 Treasure Hunt
+* Deluxe Relax Radio
+* Downtown Market Set
+* Dragon Gate
+* Feelgood Funk Radio
+* Jade Road Radio
+* Landmark Buildings
+* Leisure Venues
+* Mediterranean Heritage
+* Modern Architecture
+* Office Evolution
+* San Francisco Set
+* Skyrail Radio
+* Skyscrapers
+* Smooth Vibe FM Radio
+* Soft Rock Radio
+* Supply Chains
+* Synth & Steel Radio
+* Urban Promenades
+
+</details>
 
 ---
 
