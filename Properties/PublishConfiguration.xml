@@ -47,7 +47,7 @@ Complete, 100% standalone Turkish localization for Cities: Skylines II (compatib
 	<ModVersion Value="2.0.1" />
 	<GameVersion Value="1.6.*" />
 	<ChangeLog Value="v2.0.1: Oyun sürümü uyumluluğu güncellendi (1.6.*), mağaza galerisi ve açıklama biçimlendirmesi iyileştirildi." />
-	<ExternalLink Type="github" Url="https://github.com/KaanBahaSever/cs2-turkce-yama" />
+	<ExternalLink Type="github" Url="https://github.com/KaanBahaSever/cities-skylines-II-turkce-yama" />
 	<!-- Public | Unlisted (reachable by link only) | Private. Anything else silently means Public. -->
 	<AccessLevel Value="Public" />
 </Publish>
