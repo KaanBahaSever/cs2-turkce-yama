@@ -4,69 +4,49 @@
 	<ModId Value="159725" />
 	<DisplayName Value="Türkçe Çeviri" />
 	<ShortDescription Value="Cities: Skylines II için güncel eksiksiz Türkçe çeviri. Başka hiçbir mod gerektirmez." />
-	<LongDescription><![CDATA[# Cities: Skylines II - Türkçe Çeviri (v2.0.0)
+	<LongDescription><![CDATA[# Cities: Skylines II - Türkçe Çeviri (v2.0.1)
 
 Cities: Skylines II için baştan sona hazırlanmış, harici hiçbir eklentiye ihtiyaç duymayan **tamamen bağımsız (standalone)** Türkçe dil modudur. Arayüz, ekonomi panelleri, politikalar, öğreticiler, DLC'ler ve şehir bildirimleri dahil oyunun tamamını Türkçeleştirir.
 
 ---
 
-### ⚠️ Önemli Kurulum Notları
+### [!] Önemli Kurulum Notları
 
-* **Uyumlu Oyun Sürümü:** **`v1.6.2f1`** (24.267 çeviri anahtarının tamamı günceldir).
+* **Uyumlu Oyun Sürümü:** **1.6.x / 1.6.2f1** (24.267 çeviri anahtarının tamamı günceldir).
 * **Ek Mod Kullanmayın:** Çevirinin çalışması için **I18n EveryWhere veya başka bir yardımcı mod KESİNLİKLE GEREKMEZ.** Mod tek başına çalışır; ekstra dil modları kurmanıza gerek yoktur.
 * **Eski Sürümü Silin:** Eğer daha önce v1 sürümünü (manuel PowerShell kurulumu) kullandıysanız, çakışma olmaması için şu klasörü bilgisayarınızdan silin:
   `%LOCALAPPDATA%Low\Colossal Order\Cities Skylines II\Mods\TurkishLang`
 
 ---
 
-### ✨ Öne Çıkanlar
+### › Öne Çıkanlar
 
 * **Gerçek Dil Desteği:** Oyunun *Seçenekler > Arayüz > Dil* menüsüne doğrudan **"Türkçe"** seçeneğini ekler. İngilizce dosyalarını ezmez, dilediğiniz an diğer dillere geçiş yapabilirsiniz.
-* **Doğru Türkçe Karakterler:** Arayüzdeki büyük/küçük harf dönüşümleri (İ/i, I/ı) düzeltilmiştir; menülerde bozuk başlıklar (`PARADOX HESABı` vb.) yer almaz.
+* **Doğru Türkçe Karakterler:** Arayüzdeki büyük/küçük harf dönüşümleri (İ/i, I/ı) düzeltilmiştir; menülerde bozuk başlıklar (PARADOX HESABI vb.) yer almaz.
 * **Eksiksiz İçerik:** 24.000'den fazla satır; tüm temel oyun ve ek içerikleri kapsar. Şehir planlama ve ekonomi terimleri özenle yerelleştirilmiştir.
 
 ---
 
-### 🎮 Nasıl Kullanılır?
+### › Nasıl Kullanılır?
 
 1. Modu Paradox Mods üzerinden aktif edin ve oyunu başlatın.
-2. Mod ilk açılışta dili otomatik olarak **Türkçe** yapar.  
+2. Mod ilk açılışta dili otomatik olarak **Türkçe** yapar.
    *(İstediğiniz zaman Seçenekler > Arayüz > Dil menüsünden dili değiştirebilirsiniz).*
 
 ---
 
 **English:**  
-Complete, 100% standalone Turkish localization for Cities: Skylines II (compatible with patch **v1.6.2f1**). Registers a native "Türkçe" option in the language menu. **No third-party mods (such as I18n EveryWhere) are required.**
+Complete, 100% standalone Turkish localization for Cities: Skylines II (compatible with patch **1.6.x**). Registers a native "Türkçe" option in the language menu. **No third-party mods (such as I18n EveryWhere) are required.**
 ]]></LongDescription>
 	<!-- Relative to the repository root (the publish target runs ModPublisher from there). Regenerate: python tools/make_thumbnail.py -->
 	<Thumbnail Value="Properties/Thumbnail.png" />
+	<!-- Gallery images, repeatable. Must be direct children of <Publish>: a <Screenshots> wrapper is ignored by ModPublisher. -->
+	<Screenshot Value="Properties/Thumbnail.png" />
 	<Tag Value="Code Mod" />
 	<ForumLink Value="" />
-	<ModVersion Value="2.0.0" />
-	<GameVersion Value="1.6.2f1" />
-	<ChangeLog>
-## v2.0.0 - Bağımsız mod / Standalone rewrite
-
-**Türkçe**
-- Baştan yazıldı: artık **tamamen bağımsız bir C# modu**. Çevirinin tamamı DLL'in içine gömülü; I18N Everywhere dahil hiçbir ek mod gerekmiyor.
-- v1'deki PowerShell kurulum betiği ve elle kopyalanan JSON dosyaları kaldırıldı. Abone olmak yeterli.
-- Seçenekler > Arayüz > Dil listesine gerçek bir **Türkçe** seçeneği eklenir; İngilizce metinlerin üzerine yazılmaz.
-- Oyunun **1.6.2f1** yaması desteklenir: **24.267 satır**, %100 kapsam (yemek kamyonetleri, The Hub, Emerald Estuary, doku boyama araçları ve yeni düzenleyici seçenekleri dahil).
-- Türkçe büyük harf hataları kökünden giderildi: oyunun BÜYÜK HARFLE gösterdiği tüm başlıklar artık doğru ("PARADOX HESABı", "GRAFIK" yerine **PARADOX HESABI**, **GRAFİK**). Yabancı özel adlar (CITIES: SKYLINES) korunur.
-- Dil listesinde **Türkçe** doğru görünür (oyun listeyi modlardan önce donduruyordu).
-- Çökmeye karşı güvenli kültür ayarı: tr-TR kültürü yalnızca Türkçe etkinken uygulanır, sayı biçimi değişmez (invariant) tutulur, dil değişince eski kültür geri yüklenir.
-- Başka bir Türkçe çeviri yüklüyse çakışmaz; anahtarlar birleştirilir. Oyun dil listesini yeniden kurduğunda mod kendini tekrar kaydeder.
-
-**English**
-- Complete rewrite into a **standalone C# mod**. The whole translation is embedded in the DLL; no I18N Everywhere, no other dependency.
-- The v1 PowerShell installer and loose JSON files are gone. Subscribing is all it takes.
-- Adds a native **Türkçe** entry to Options > Interface > Language instead of overwriting English.
-- Supports game patch **1.6.2f1**: **24,267 strings**, 100% coverage.
-- Turkish capitals fixed at the root: every heading the game shows in ALL CAPS is now correct ("PARADOX HESABI", "GRAFİK" instead of "PARADOX HESABı", "GRAFIK"). Foreign proper nouns (CITIES: SKYLINES) are preserved.
-- **Türkçe** shows correctly in the language list (the game froze that list before mods load).
-- Crash-safe culture handling: tr-TR is applied only while Turkish is active, keeps invariant number formatting, and is restored when the language changes.
-- Conflict safe with other Turkish translations; re-registers itself when the game rebuilds its locale list.
-	</ChangeLog>
+	<ModVersion Value="2.0.1" />
+	<GameVersion Value="1.6.*" />
+	<ChangeLog Value="v2.0.1: Oyun sürümü uyumluluğu güncellendi (1.6.*), mağaza galerisi ve açıklama biçimlendirmesi iyileştirildi." />
 	<ExternalLink Type="github" Url="https://github.com/KaanBahaSever/cs2-turkce-yama" />
 	<!-- Public | Unlisted (reachable by link only) | Private. Anything else silently means Public. -->
 	<AccessLevel Value="Public" />

@@ -134,12 +134,15 @@ Yalnızca açıklamayı, küçük resmi ya da bağlantıları değiştirdiyseniz
 
 ### Bilinmesi gerekenler
 
-- **`GameVersion`** şu an `1.6.2f1`: modun test edildiği tam oyun sürümü. Bu değer siteye "önerilen oyun sürümü" olarak
-  olduğu gibi iletilir (`1.*` biçimi de kabul ediliyor; ilk yüklemede denendi). Her oyun yamasında çeviriyi güncellerken bu alanı da
-  yeni sürüme çekin.
+- **`GameVersion` her zaman joker içermeli: `1.6.*`.** Oyun içi mod tarayıcısı bu değerden bir regex kurup oyunun **tam** sürüm
+  dizgesiyle (`1.6.2f1 (767.21d1) [6300.26419]`) eşleştirir. `1.6.2f1` gibi tam bir değer sondaki ek yüzünden asla eşleşmez ve mod
+  "oyunun eski bir sürümü için yapılmış" uyarısıyla gösterilir (v2.0.0'da yaşandı, v2.0.1'de düzeltildi). `1.6.*` ve `1.*` eşleşir;
+  `1.6.2.*` ve `1.6.2f1.*` eşleşmez. Yayın hedefi jokersiz değeri reddeder. Oyun 1.7'ye geçince alanı `1.7.*` yapıp `Update` çalıştırın.
 - **Etiket:** ModPublisher her kod moduna `Code Mod` etiketini kendisi ekler. Diğer etiketleri yüklemeden sonra sitede düzenleyebilirsiniz.
 - **Ekran görüntüleri:** Oyun içi görüntüleri `Properties/` altına koyup her biri için
   `<Screenshot Value="Properties/ekran1.jpg" />` satırı ekleyin (en çok 10 adet, her biri en çok 2 MB), sonra `Update` çalıştırın.
+  Satırlar `<Publish>` kökünün **doğrudan** altında olmalı: `<Screenshots>` gibi bir sarmalayıcı ModPublisher tarafından yok sayılır.
+  Dosyadaki liste sitedekinin **tamamının** yerine geçer.
 - **Elle çalıştırmak isterseniz** (derleme hedefi olmadan), depo kökünden:
 
   ```powershell
@@ -249,9 +252,11 @@ Use `-p:PdxCommand=Update` when only the description, thumbnail or links changed
 
 ### Good to know
 
-- **`GameVersion`** is `1.6.2f1`, the exact game build the mod was tested with. The value is forwarded verbatim as the
-  "recommended game version" (the `1.*` form is accepted too; it was used for the first upload). Bump it together with the
-  translation on every game patch.
+- **`GameVersion` must always carry a wildcard: `1.6.*`.** The in-game mod browser turns the value into an anchored regex and tests it
+  against the game's **full** version string (`1.6.2f1 (767.21d1) [6300.26419]`). An exact value such as `1.6.2f1` can never match
+  because of that suffix, and the mod is shown as "made for an older version of the game" (happened in v2.0.0, fixed in v2.0.1).
+  `1.6.*` and `1.*` match; `1.6.2.*` and `1.6.2f1.*` do not. The publish target rejects a value without a wildcard. When the game
+  moves to 1.7, change it to `1.7.*` and run `Update`.
 - ModPublisher tags every code mod `Code Mod` by itself; other tags can be edited on the website afterwards.
 - Screenshots: add `<Screenshot Value="Properties/shot1.jpg" />` lines (10 max, 2 MB each) and run `Update`.
 - The official IDE route (full toolchain from `Options > Modding`, Visual Studio publish profiles `PublishNewMod`,

@@ -1,8 +1,8 @@
-# Cities: Skylines II - Türkçe Çeviri (v2.0.0)
+# Cities: Skylines II - Türkçe Çeviri (v2.0.1)
 
 Cities: Skylines II için eksiksiz ve bağımsız Türkçe yerelleştirme modu.
 
-* **Uyumlu Sürüm:** Oyun v1.6.2f1 (24.267 anahtar/metin)
+* **Uyumlu Sürüm:** Oyun `1.6.*` - 1.6.2f1 ile test edildi (24.267 anahtar/metin)
 * **Bağımsız:** I18n EveryWhere veya başka hiçbir yardımcı moda ihtiyaç duymaz.
 
 ---
